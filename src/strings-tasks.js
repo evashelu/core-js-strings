@@ -71,8 +71,12 @@ function concatenateStrings(value1, value2) {
  *   getFirstChar('cat') => 'c'
  *   getFirstChar('') => ''
  */
-function getFirstChar(/* value */) {
-  throw new Error('Not implemented');
+function getFirstChar(value) {
+  if (typeof value !== 'string') {
+    throw new Error('Input must be a string');
+  }
+
+  return value.charAt(0); // или можно использовать value[0]
 }
 
 /**
