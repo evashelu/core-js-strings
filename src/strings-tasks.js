@@ -108,12 +108,8 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   removeLeadingWhitespaces('cat ') => 'cat '
  *   removeLeadingWhitespaces('\t\t\tHello, World! ') => 'Hello, World! '
  */
-function removeLeadingWhitespaces(value) {
-  if (typeof value !== 'string') {
-    throw new Error('Input must be a string');
-  }
-
-  return value.replace(/^\s+/, '');
+function removeLeadingWhitespaces(str) {
+  return str.trimStart();
 }
 
 /**
@@ -127,12 +123,8 @@ function removeLeadingWhitespaces(value) {
  *   removeTrailingWhitespaces('cat ') => 'cat'
  *   removeTrailingWhitespaces('\t\t\tHello, World! ') => '\t\t\tHello, World!'
  */
-function removeTrailingWhitespaces(value) {
-  if (typeof value !== 'string') {
-    throw new Error('Input must be a string');
-  }
-
-  return value.replace(/ +$/, '');
+function removeTrailingWhitespaces(str) {
+  return str.trimEnd();
 }
 
 /**
@@ -246,11 +238,7 @@ function sumOfCodes(str = '') {
  *   startsWith('Hello World', 'Hello') => true
  */
 function startsWith(str, substr) {
-  if (typeof str !== 'string' || typeof substr !== 'string') {
-    throw new Error('Both arguments must be strings');
-  }
-
-  return str.slice(0, substr.length) === substr;
+  return str.startsWith(substr);
 }
 
 /**
@@ -265,11 +253,7 @@ function startsWith(str, substr) {
  *   endsWith('Hello World', 'Hello') => false
  */
 function endsWith(str, substr) {
-  if (typeof str !== 'string' || typeof substr !== 'string') {
-    throw new Error('Both arguments must be strings');
-  }
-
-  return str.slice(-substr.length) === substr;
+  return str.endsWith(substr);
 }
 
 /**
@@ -286,14 +270,9 @@ function endsWith(str, substr) {
  *   formatTime(0, 0) => "00:00"
  */
 function formatTime(minutes, seconds) {
-  if (
-    typeof minutes !== 'number' ||
-    typeof seconds !== 'number' ||
-    minutes < 0 ||
-    seconds < 0
-  ) {
-    throw new Error('Both arguments must be non-negative integers');
-  }
+  return `${minutes.toString().padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
 }
 
 /**
@@ -345,12 +324,11 @@ function orderAlphabetically(str) {
  *   containsSubstring('JavaScript is Fun', 'Python') => false
  *   containsSubstring('12345', '34') => true
  */
-function containsSubstring(str, substring) {
-  if (typeof str !== 'string' || typeof substring !== 'string') {
+function containsSubstring(str, substr) {
+  if (typeof str !== 'string' || typeof substr !== 'string') {
     throw new Error('Both arguments must be strings');
   }
-
-  return str.includes(substring);
+  return str.includes(substr);
 }
 
 /**
@@ -409,8 +387,14 @@ function isPalindrome(str) {
  *   findLongestWord('A long and winding road') => 'winding'
  *   findLongestWord('No words here') => 'words'
  */
-function findLongestWord(/* sentence */) {
-  throw new Error('Not implemented');
+function findLongestWord(sentence) {
+  return sentence
+    .split(' ')
+    .filter(Boolean)
+    .reduce(
+      (longest, word) => (word.length > longest.length ? word : longest),
+      ''
+    );
 }
 
 /**
@@ -423,8 +407,14 @@ function findLongestWord(/* sentence */) {
  *   reverseWords('Hello World') => 'olleH dlroW'
  *   reverseWords('The Quick Brown Fox') => 'ehT kciuQ nworB xoF'
  */
-function reverseWords(/* str */) {
-  throw new Error('Not implemented');
+function reverseWords(str) {
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string');
+  }
+  return str
+    .split(' ')
+    .map((word) => word.split('').reverse().join(''))
+    .join(' ');
 }
 
 /**
@@ -438,8 +428,18 @@ function reverseWords(/* str */) {
  *   invertCase('JavaScript is Fun') => 'jAVAsCRIPT IS fUN'
  *   invertCase('12345') => '12345'
  */
-function invertCase(/* str */) {
-  throw new Error('Not implemented');
+function invertCase(str) {
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string');
+  }
+  return str
+    .split('')
+    .map((char) => {
+      return char === char.toUpperCase()
+        ? char.toLowerCase()
+        : char.toUpperCase();
+    })
+    .join('');
 }
 
 /**
@@ -455,8 +455,11 @@ function invertCase(/* str */) {
  *   getStringFromTemplate('John','Doe') => 'Hello, John Doe!'
  *   getStringFromTemplate('Chuck','Norris') => 'Hello, Chuck Norris!'
  */
-function getStringFromTemplate(/* firstName, lastName */) {
-  throw new Error('Not implemented');
+function getStringFromTemplate(firstName, lastName) {
+  if (typeof firstName !== 'string' || typeof lastName !== 'string') {
+    throw new Error('Both arguments must be strings');
+  }
+  return `Hello, ${firstName} ${lastName}!`;
 }
 
 /**
@@ -469,8 +472,19 @@ function getStringFromTemplate(/* firstName, lastName */) {
  *   extractNameFromTemplate('Hello, John Doe!') => 'John Doe'
  *   extractNameFromTemplate('Hello, Chuck Norris!') => 'Chuck Norris'
  */
-function extractNameFromTemplate(/* value */) {
-  throw new Error('Not implemented');
+function extractNameFromTemplate(value) {
+  if (typeof value !== 'string') {
+    throw new Error('Input must be a string');
+  }
+
+  const regex = /Hello,\s+(\w+)\s+(\w+)!/;
+  const matches = value.match(regex);
+
+  if (!matches) {
+    throw new Error('Invalid input format');
+  }
+
+  return `${matches[1]} ${matches[2]}`;
 }
 
 /**
@@ -484,8 +498,11 @@ function extractNameFromTemplate(/* value */) {
  *   unbracketTag('<span>') => 'span'
  *   unbracketTag('<a>') => 'a'
  */
-function unbracketTag(/* str */) {
-  throw new Error('Not implemented');
+function unbracketTag(str) {
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string');
+  }
+  return str.replace(/^<|>$/g, '');
 }
 
 /**
